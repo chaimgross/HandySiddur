@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "992813919267",
+    "firebase_url": "https://handysiddur.firebaseio.com",
+    "project_id": "handysiddur",
+    "storage_bucket": "handysiddur.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:992813919267:android:453d97323c5ca24eacd596",
+        "android_client_info": {
+          "package_name": "com.handySiddur.bracha"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "992813919267-ddekn945b78cur107v5rgaj3q788egp8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.handySiddur.bracha",
+            "certificate_hash": "f288e9bbf18b1c70e56602d48b522c144ad05608"
+          }
+        },
+        {
+          "client_id": "992813919267-tbruuqlmo19m45lico0t2cm5t8brmlca.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoS4YocJRq18HduvP462QpYDPmqCewcDg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "992813919267-tbruuqlmo19m45lico0t2cm5t8brmlca.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
