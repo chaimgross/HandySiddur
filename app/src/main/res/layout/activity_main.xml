@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
-
-    <TextView
-        android:id="@+id/jewish_date"
-        android:visibility="gone"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:background="@color/handy_green"
-        android:textColor="@color/white"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"/>
 
     <androidx.wear.widget.WearableRecyclerView
         android:id="@+id/list_view"
@@ -23,10 +13,17 @@
         android:scrollbars="vertical"
         android:background="@android:color/transparent"
         android:padding="@dimen/box_inset_layout_padding"
-        android:layout_marginTop="-3dp"
         tools:context=".MainActivity"
-        tools:deviceIds="wear">
+        tools:deviceIds="wear"/>
 
 
-    </androidx.wear.widget.WearableRecyclerView>
-</LinearLayout>
+    <TextView
+        android:id="@+id/jewish_date"
+        android:visibility="visible"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:background="@color/handy_green"
+        android:textColor="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"/>
+</RelativeLayout>

@@ -1,14 +1,14 @@
 package com.handySiddur.bracha
 
 import android.content.Context
-import android.graphics.Typeface
-import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.RelativeLayout
+import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.RecyclerView
 
 
 class BrachaListAdapter(
@@ -31,7 +31,7 @@ class BrachaListAdapter(
     override fun onBindViewHolder(holder: BrachaViewHolder, position: Int) {
         holder.menuIcon.setImageResource(items.get(position).image)
         holder.menuItem.setText(items.get(position).name)
-        holder.menuItem.typeface = Typeface.SANS_SERIF
+        holder.menuItem.typeface = ResourcesCompat.getFont(context, R.font.open_sans)
         holder.menuItem.setOnClickListener {listener.selected(position)}
     }
 

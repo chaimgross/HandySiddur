@@ -43,5 +43,7 @@ dependencies {
     compileOnly 'com.google.android.wearable:wearable:2.4.0'
     implementation files('libs/zmanim-1.4.0alpha.jar')
     implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'com.vstechlab.easyfonts:easyfonts:1.0.0'
+
 }
 apply plugin: 'com.google.gms.google-services'

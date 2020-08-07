@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/menu_container"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -25,6 +24,7 @@
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/menu_icon"
         android:layout_toRightOf="@+id/menu_icon"
+        android:fontFamily="@font/open_sans"
         android:text="Menu Item"
         android:textColor="@color/white"
         android:textSize="23sp"

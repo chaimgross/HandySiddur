@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 
 class ZmanimAdapter(
@@ -32,6 +33,8 @@ class ZmanimAdapter(
         init {
             zmanTitle = view.findViewById(R.id.zman_title)
             zmanValue = view.findViewById(R.id.zman_value)
+            zmanTitle.typeface = ResourcesCompat.getFont(view.context, R.font.open_sans);
+            zmanValue.typeface = ResourcesCompat.getFont(view.context, R.font.open_sans);
         }
     }
 

@@ -14,6 +14,9 @@
 
     <TextView
         android:textSize="20sp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="16sp"
+        android:lines="1"
         android:textColor="@color/white"
         android:layout_toEndOf="@id/zman_title"
         android:id="@+id/zman_value"
