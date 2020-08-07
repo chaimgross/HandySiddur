@@ -157,7 +157,7 @@ class MainActivity : WearableActivity() {
         brachas.add(BrachaItem(R.drawable.hiking, "T. Haderech", getString(R.string.tefilas_haderech)))
         brachas.add(BrachaItem(R.drawable.bed, "K.S. al Hamita", getString(R.string.krias_shema_mita)))
         brachas.add(BrachaItem(R.drawable.moon, "K. Levana", getString(R.string.k_levana)))
-        brachas.add(BrachaItem(R.drawable.lighting,"Lightning", getString(R.string.lightning)))
+        brachas.add(BrachaItem(R.drawable.lightning,"Lightning", getString(R.string.lightning)))
         brachas.add(BrachaItem(R.drawable.thunder,"Thunder", getString(R.string.thunder)))
         brachas.add(BrachaItem(R.drawable.rainbow,"Rainbow", getString(R.string.rainbow)))
         brachas.add(BrachaItem(R.drawable.toilet, "Asher Yatzar", getString(R.string.asher_yatzar)))

@@ -42,8 +42,9 @@ class ZmanimActivity : WearableActivity() {
                 TimeZone.getDefault()
             )
         )
+
         zmanim.add(Pair("Daf:", daf))
-        if (date.candleLighting.day == 6) {
+        if (date.calendar.get(Calendar.DAY_OF_WEEK) == 6) {
             zmanim.add(Pair("Lighting:", getDate(date.candleLighting)))
         }
         zmanim.add(Pair("Sunrise:", getDate(date.sunrise)))
