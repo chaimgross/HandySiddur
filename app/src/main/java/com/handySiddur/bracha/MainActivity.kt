@@ -1,6 +1,7 @@
 package com.handySiddur.bracha
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -42,11 +43,36 @@ class MainActivity : WearableActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
-                1)
+
+        when {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED -> {
+                // You can use the API that requires the permission.
+            }
+            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) -> {
+            // In an educational UI, explain to the user why your app requires this
+            // permission for a specific feature to behave as expected. In this UI,
+            // include a "cancel" or "no thanks" button that allows the user to
+            // continue using your app without granting the permission.
+               AlertDialog.Builder(this).setTitle("Location Permission")
+                   .setMessage("We need your location to show you the proper davening according to your current location")
+                   .setNegativeButton("No thanks") { _, _ -> }
+                   .setPositiveButton("Allow") { _, _ ->
+                       ActivityCompat.requestPermissions(
+                           this,
+                           arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                           1
+                       )
+                   }.show()
+            }
+            else -> {
+                // You can directly ask for the permission.
+                // The registered ActivityResultCallback gets the result of this request.
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                    1)
+            }
         }
 
         // Enables Always-on
@@ -91,11 +117,11 @@ class MainActivity : WearableActivity() {
         //wearableRecyclerView.item
     }
 
-    fun setPrayer(locatiom: Location) {
-        cPrayer = getCurrentPrayer(locatiom)
+    private fun setPrayer(location: Location) {
+        cPrayer = getCurrentPrayer(location)
     }
 
-    fun addTefila(date: String) {
+    private fun addTefila(date: String) {
         if (cPrayer != prayer.NONE) {
             brachas.add(
                 3, BrachaItem(
@@ -111,7 +137,7 @@ class MainActivity : WearableActivity() {
         }
     }
 
-    fun setBrachas() {
+    private fun setBrachas() {
         brachas.clear()
         var cal = JewishHolidaysCalendar()
         var today = Calendar.getInstance()
@@ -183,7 +209,7 @@ class MainActivity : WearableActivity() {
     }
 
 
-    fun getCurrentPrayer(location: Location): prayer {
+    private fun getCurrentPrayer(location: Location): prayer {
         date = ZmanimCalendar(
             GeoLocation(
                 "",

@@ -15,7 +15,6 @@ class ZmanimActivity : WearableActivity() {
     private lateinit var wearableRecyclerView: WearableRecyclerView
     private var zAdapter: ZmanimAdapter? = null
     private val zmanim: ArrayList<Pair<String, String>> = ArrayList()
-    private lateinit var lastLocation: Location
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -31,46 +30,45 @@ class ZmanimActivity : WearableActivity() {
         wearableRecyclerView.layoutManager =
             WearableLinearLayoutManager(this, CustomScrollingLayoutCallback())
 
-        lastLocation = intent.getParcelableExtra("location")
-        var daf = intent.getStringExtra("daf")
-        var date = ZmanimCalendar(
-            GeoLocation(
-                "",
-                lastLocation.latitude,
-                lastLocation.longitude,
-                lastLocation.altitude,
-                TimeZone.getDefault()
+        intent.getParcelableExtra<Location>("location")?.let { lastLocation ->
+            val daf = intent.getStringExtra("daf") ?: ""
+            val date = ZmanimCalendar(
+                GeoLocation(
+                    "",
+                    lastLocation.latitude,
+                    lastLocation.longitude,
+                    lastLocation.altitude,
+                    TimeZone.getDefault()
+                )
             )
-        )
-
-        zmanim.add(Pair("Daf:", daf))
-        if (date.calendar.get(Calendar.DAY_OF_WEEK) == 6) {
-            zmanim.add(Pair("Lighting:", getDate(date.candleLighting)))
+            zmanim.add(Pair("Daf:", daf))
+            if (date.calendar.get(Calendar.DAY_OF_WEEK) == 6) {
+                zmanim.add(Pair("Lighting:", getDate(date.candleLighting)))
+            }
+            zmanim.add(Pair("Sunrise:", getDate(date.sunrise)))
+            zmanim.add(Pair("Sunset:", getDate(date.sunset)))
+            zmanim.add(Pair("Alos Hashachar:", getDate(date.alos72)))
+            zmanim.add(Pair("Sof Shma (MA)", getDate(date.sofZmanShmaMGA)))
+            zmanim.add(Pair("Sof Shma (GRA)", getDate(date.sofZmanShmaGRA)))
+            zmanim.add(Pair("Sof Tefila (MA)", getDate(date.sofZmanTfilaMGA)))
+            zmanim.add(Pair("Sof Tefila (GRA)", getDate(date.sofZmanTfilaGRA)))
+            zmanim.add(Pair("Chatzos:",  getDate(date.chatzos)))
+            zmanim.add(Pair("Early Mincha:", getDate(date.minchaGedola)))
+            zmanim.add(Pair("Plag HaMincha:", getDate(date.plagHamincha)))
+            zmanim.add(Pair("Tzais:", getDate(date.tzais)))
+            zmanim.add(Pair("Tzais (RT):", getDate(date.tzais72)))
         }
-        zmanim.add(Pair("Sunrise:", getDate(date.sunrise)))
-        zmanim.add(Pair("Sunset:", getDate(date.sunset)))
-        zmanim.add(Pair("Alos Hashachar:", getDate(date.alos72)))
-        zmanim.add(Pair("Sof Shma (MA)", getDate(date.sofZmanShmaMGA)))
-        zmanim.add(Pair("Sof Shma (GRA)", getDate(date.sofZmanShmaGRA)))
-        zmanim.add(Pair("Sof Tefila (MA)", getDate(date.sofZmanTfilaMGA)))
-        zmanim.add(Pair("Sof Tefila (GRA)", getDate(date.sofZmanTfilaGRA)))
-        zmanim.add(Pair("Chatzos:",  getDate(date.chatzos)))
-        zmanim.add(Pair("Early Mincha:", getDate(date.minchaGedola)))
-        zmanim.add(Pair("Plag HaMincha:", getDate(date.plagHamincha)))
-        zmanim.add(Pair("Tzais:", getDate(date.tzais)))
-        zmanim.add(Pair("Tzais (RT):", getDate(date.tzais72)))
+
 
         zAdapter = ZmanimAdapter(zmanim, this)
         wearableRecyclerView.adapter = zAdapter
     }
 
     private fun getDate(date: Date): String {
-        var mins: String
-        if (date.minutes < 10) {
-            mins = "0" + date.minutes
-        }
-        else {
-            mins = ""+ date.minutes
+        val mins: String = if (date.minutes < 10) {
+            "0" + date.minutes
+        } else {
+            ""+ date.minutes
         }
 
         return "" + date.hours + ":" + mins
