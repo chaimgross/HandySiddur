@@ -1,6 +1,7 @@
 package com.handySiddur.bracha
 
 import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -51,20 +52,20 @@ class MainActivity : WearableActivity() {
                 // You can use the API that requires the permission.
             }
             shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) -> {
-            // In an educational UI, explain to the user why your app requires this
-            // permission for a specific feature to behave as expected. In this UI,
-            // include a "cancel" or "no thanks" button that allows the user to
-            // continue using your app without granting the permission.
-               AlertDialog.Builder(this).setTitle("Location Permission")
-                   .setMessage("We need your location to show you the proper davening according to your current location")
-                   .setNegativeButton("No thanks") { _, _ -> }
-                   .setPositiveButton("Allow") { _, _ ->
-                       ActivityCompat.requestPermissions(
-                           this,
-                           arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
-                           1
-                       )
-                   }.show()
+                // In an educational UI, explain to the user why your app requires this
+                // permission for a specific feature to behave as expected. In this UI,
+                // include a "cancel" or "no thanks" button that allows the user to
+                // continue using your app without granting the permission.
+                AlertDialog.Builder(this).setTitle("Location Permission")
+                    .setMessage("We need your location to show you the proper times and Davening according to your current location")
+                    .setNegativeButton("No thanks") { _, _ -> }
+                    .setPositiveButton("Allow") { _, _ ->
+                        ActivityCompat.requestPermissions(
+                            this,
+                            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                            1
+                        )
+                    }.show()
             }
             else -> {
                 // You can directly ask for the permission.
@@ -95,26 +96,34 @@ class MainActivity : WearableActivity() {
                 setPrayer(lastLocation!!)
             }
         }
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location : Location? ->
-                if (location != null) {
-                    if (lastLocation == null || getCurrentPrayer(location) != getCurrentPrayer(lastLocation!!)) {
-                        Toast.makeText(this, "Location updated.", Toast.LENGTH_SHORT).show()
-                        setPrayer(location)
-                        setBrachas()
-                    }
-                    val locationText = Gson().toJson(location)
-                    val prefs = getSharedPreferences("userPrefs", Context.MODE_PRIVATE)
-                    prefs.edit().putString("location", locationText).apply()
-                }
-                else {
-                    Toast.makeText(this, "Location not determined.", Toast.LENGTH_SHORT).show()
-                }
-            }
+        getLocation()
 
-      setBrachas()
+        setBrachas()
         //wearableRecyclerView.item
+    }
+
+    private fun getLocation() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        if(ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    if (location != null) {
+                        if (lastLocation == null || getCurrentPrayer(location) != getCurrentPrayer(lastLocation!!)) {
+                            lastLocation = location
+                            Toast.makeText(this, "Location updated.", Toast.LENGTH_SHORT).show()
+                            setPrayer(location)
+                            setBrachas()
+                        }
+                        val locationText = Gson().toJson(location)
+                        val prefs = getSharedPreferences("userPrefs", Context.MODE_PRIVATE)
+                        prefs.edit().putString("location", locationText).apply()
+                    } else {
+                        Toast.makeText(this, "Location not determined.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+        }
     }
 
     private fun setPrayer(location: Location) {
@@ -126,9 +135,11 @@ class MainActivity : WearableActivity() {
             brachas.add(
                 3, BrachaItem(
                     R.drawable.siddur, "Siddur",
-                    if (cPrayer == prayer.SHACHRIS) getString(R.string.shachris)
-                    else if (cPrayer == prayer.MINCHA) getString(R.string.mincha)
-                    else getString(R.string.maariv)
+                    when (cPrayer) {
+                        prayer.SHACHRIS -> getString(R.string.shachris)
+                        prayer.MINCHA -> getString(R.string.mincha)
+                        else -> getString(R.string.maariv)
+                    }
                 )
             )
             jewishDateText.visibility = View.VISIBLE
@@ -140,18 +151,18 @@ class MainActivity : WearableActivity() {
     private fun setBrachas() {
         brachas.clear()
         var cal = JewishHolidaysCalendar()
-        var today = Calendar.getInstance()
+        val today = Calendar.getInstance()
         if (cPrayer == prayer.MARIV) {
             today.add(Calendar.DATE, 1)
         }
         cal = JewishHolidaysCalendar(today, cal.locale)
         val cal2 = JewishCalendar(today)
-        var isChannuka = cal2.isChanukah
-        var isRoshChodesh = cal2.isRoshChodesh
+        val isChannuka = cal2.isChanukah
+        val isRoshChodesh = cal2.isRoshChodesh
         var isPesach = false
         var isPurim = false
         var isSukkos = false
-        var omer = cal2.dayOfOmer
+        val omer = cal2.dayOfOmer
 
         val isNissan = cal2.jewishMonth == 1
 
@@ -170,7 +181,7 @@ class MainActivity : WearableActivity() {
 
 
         if (omer > 0) {
-            var omerString = getString(R.string.sefira, getString(resources.getIdentifier("_$omer", "string", packageName)))
+            val omerString = getString(R.string.sefira, getString(resources.getIdentifier("_$omer", "string", packageName)))
             brachas.add(BrachaItem(R.drawable.sefiras_haomer, "Sefiras Haomer", omerString))
         }
 
@@ -192,7 +203,7 @@ class MainActivity : WearableActivity() {
         val obj = object : ItemSelectedListener {
             override fun selected(pos: Int) {
                 val intent = Intent(this@MainActivity, BrachaActivity::class.java)
-                intent.putExtra("bracha", brachas.get(pos))
+                intent.putExtra("bracha", brachas[pos])
                 startActivity(intent)
             }
 
@@ -226,6 +237,20 @@ class MainActivity : WearableActivity() {
             return  prayer.MINCHA
         else
             return  prayer.MARIV
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getLocation()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            getLocation()
+        }
     }
 }
 

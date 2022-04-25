@@ -6,9 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.wearable.activity.WearableActivity
 import android.support.wearable.view.CardFrame
-import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.text.HtmlCompat
 
 
@@ -20,8 +18,8 @@ class BrachaActivity: WearableActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.bracha_activity)
 
-        textView = findViewById<ZoomTextView>(R.id.text_view)
-        textView.setListener({ switchColor() })
+        textView = findViewById(R.id.text_view)
+        textView.setListener { switchColor() }
 //        val scrollView = findViewById<CardScrollView>(R.id.scroll_view)
 //        scrollView.isExpansionEnabled = true;
 //        scrollView.expansionDirection = 1;
@@ -34,7 +32,7 @@ class BrachaActivity: WearableActivity() {
             imageIcon.setImageResource(bracha.image)
         }
 
-        cardFrame = findViewById<CardFrame>(R.id.card_frame)
+        cardFrame = findViewById(R.id.card_frame)
         cardFrame.isExpansionEnabled = true
         cardFrame.expansionDirection = 1
         cardFrame.expansionFactor = 10.0f
