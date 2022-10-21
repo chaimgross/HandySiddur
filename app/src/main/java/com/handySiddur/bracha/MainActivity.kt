@@ -82,7 +82,7 @@ class MainActivity : WearableActivity() {
         // Enables Always-on
         setAmbientEnabled()
         jewishDateText = findViewById(R.id.jewish_date)
-        wearableRecyclerView = findViewById<WearableRecyclerView>(R.id.list_view)
+        wearableRecyclerView = findViewById(R.id.list_view)
         wearableRecyclerView.apply {
             // To align the edge children (first and last) with the center of the screen
             isEdgeItemsCenteringEnabled = true
@@ -102,7 +102,6 @@ class MainActivity : WearableActivity() {
         getLocation()
 
         setBrachas()
-        //wearableRecyclerView.item
     }
 
     private fun getLocation() {
@@ -202,13 +201,19 @@ class MainActivity : WearableActivity() {
         brachas.add(BrachaItem(R.drawable.thunder,"Thunder", getString(R.string.thunder)))
         brachas.add(BrachaItem(R.drawable.rainbow,"Rainbow", getString(R.string.rainbow)))
         brachas.add(BrachaItem(R.drawable.toilet, "Asher Yatzar", getString(R.string.asher_yatzar)))
+        //brachas.add(BrachaItem(R.drawable.ic_cc_settings_button_bottom, "Settings", getString(R.string.asher_yatzar)))
         addTefila(cal.hebrewDate.toString() + " " + cal.hebrewMonthAsString)
 
         val obj = object : ItemSelectedListener {
             override fun selected(pos: Int) {
-                val intent = Intent(this@MainActivity, BrachaActivity::class.java)
-                intent.putExtra("bracha", brachas[pos])
-                startActivity(intent)
+//                if (pos == brachas.size - 1) {
+//
+//                }
+//                else {
+                    val intent = Intent(this@MainActivity, BrachaActivity::class.java)
+                    intent.putExtra("bracha", brachas[pos])
+                    startActivity(intent)
+           //     }
             }
 
         }

@@ -29,8 +29,8 @@ class BrachaListAdapter(
     }
 
     override fun onBindViewHolder(holder: BrachaViewHolder, position: Int) {
-        holder.menuIcon.setImageResource(items.get(position).image)
-        holder.menuItem.setText(items.get(position).name)
+        holder.menuIcon.setImageResource(items[position].image)
+        holder.menuItem.text = items[position].name
         holder.menuItem.typeface = ResourcesCompat.getFont(context, R.font.open_sans)
         holder.menuItem.setOnClickListener {listener.selected(position)}
     }
