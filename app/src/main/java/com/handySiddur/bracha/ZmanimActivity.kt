@@ -24,20 +24,20 @@ class ZmanimActivity : WearableActivity() {
         wearableRecyclerView.apply {
             // To align the edge children (first and last) with the center of the screen
             isEdgeItemsCenteringEnabled = true
-
             layoutManager = WearableLinearLayoutManager(this@ZmanimActivity)
+            requestFocus()
         }
         wearableRecyclerView.layoutManager =
             WearableLinearLayoutManager(this, CustomScrollingLayoutCallback())
 
-        intent.getParcelableExtra<Location>("location")?.let { lastLocation ->
+        intent.getParcelableExtra<MainActivity.ZmanLocation>("location")?.let { lastLocation ->
             val daf = intent.getStringExtra("daf") ?: ""
             val date = ZmanimCalendar(
                 GeoLocation(
                     "",
-                    lastLocation.latitude,
-                    lastLocation.longitude,
-                    lastLocation.altitude,
+                    lastLocation.lat,
+                    lastLocation.long,
+                    lastLocation.alt,
                     TimeZone.getDefault()
                 )
             )

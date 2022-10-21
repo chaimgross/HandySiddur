@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.wearable.activity.WearableActivity
 import android.view.View
 import android.widget.TextView
@@ -19,6 +20,7 @@ import androidx.wear.widget.WearableRecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
+import kotlinx.android.parcel.Parcelize
 import net.sf.hebcal.JewishHolidaysCalendar
 import net.sourceforge.zmanim.ZmanimCalendar
 import net.sourceforge.zmanim.hebrewcalendar.JewishCalendar
@@ -31,7 +33,7 @@ class MainActivity : WearableActivity() {
     private lateinit var date: ZmanimCalendar
     private lateinit var wearableRecyclerView: WearableRecyclerView
     private lateinit var jewishDateText: TextView
-    private var lastLocation: Location? = null
+    private var lastLocation: ZmanLocation? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val brachas: ArrayList<BrachaItem> = ArrayList()
     enum class prayer {
@@ -40,11 +42,12 @@ class MainActivity : WearableActivity() {
     private var cPrayer = prayer.NONE
     private var bAdapter: BrachaListAdapter? = null
 
+    @Parcelize
+    data class ZmanLocation(val lat : Double, val long : Double, val alt: Double) : Parcelable
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
         when {
             ContextCompat.checkSelfPermission(
                 this,
@@ -83,15 +86,15 @@ class MainActivity : WearableActivity() {
         wearableRecyclerView.apply {
             // To align the edge children (first and last) with the center of the screen
             isEdgeItemsCenteringEnabled = true
-
             layoutManager = WearableLinearLayoutManager(this@MainActivity)
+            requestFocus()
         }
         wearableRecyclerView.layoutManager =
             WearableLinearLayoutManager(this, CustomScrollingLayoutCallback())
 
         val json = getSharedPreferences("userPrefs", Context.MODE_PRIVATE).getString("location", null)
         if (json != null) {
-            lastLocation = Gson().fromJson(json, Location::class.java)
+            lastLocation = Gson().fromJson(json, ZmanLocation::class.java)
             if (lastLocation != null) {
                 setPrayer(lastLocation!!)
             }
@@ -110,13 +113,14 @@ class MainActivity : WearableActivity() {
             fusedLocationClient.lastLocation
                 .addOnSuccessListener { location: Location? ->
                     if (location != null) {
-                        if (lastLocation == null || getCurrentPrayer(location) != getCurrentPrayer(lastLocation!!)) {
-                            lastLocation = location
+                        val zmanLocation = ZmanLocation(location.latitude, location.longitude, location.altitude)
+                        if (lastLocation == null || getCurrentPrayer(zmanLocation) != getCurrentPrayer(lastLocation!!)) {
+                            lastLocation = zmanLocation
                             Toast.makeText(this, "Location updated.", Toast.LENGTH_SHORT).show()
-                            setPrayer(location)
+                            setPrayer(zmanLocation)
                             setBrachas()
                         }
-                        val locationText = Gson().toJson(location)
+                        val locationText = Gson().toJson(zmanLocation)
                         val prefs = getSharedPreferences("userPrefs", Context.MODE_PRIVATE)
                         prefs.edit().putString("location", locationText).apply()
                     } else {
@@ -126,7 +130,7 @@ class MainActivity : WearableActivity() {
         }
     }
 
-    private fun setPrayer(location: Location) {
+    private fun setPrayer(location: ZmanLocation) {
         cPrayer = getCurrentPrayer(location)
     }
 
@@ -220,13 +224,13 @@ class MainActivity : WearableActivity() {
     }
 
 
-    private fun getCurrentPrayer(location: Location): prayer {
+    private fun getCurrentPrayer(location: ZmanLocation): prayer {
         date = ZmanimCalendar(
             GeoLocation(
                 "",
-                location.latitude,
-                location.longitude,
-                location.altitude,
+                location.lat,
+                location.long,
+                location.alt,
                 TimeZone.getDefault()
             )
         )

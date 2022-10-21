@@ -36,6 +36,7 @@ class BrachaActivity: WearableActivity() {
         cardFrame.isExpansionEnabled = true
         cardFrame.expansionDirection = 1
         cardFrame.expansionFactor = 10.0f
+        cardFrame.requestFocus()
         setColor()
         if (bracha?.text != null) {
             textView.text = HtmlCompat.fromHtml(bracha.text,  HtmlCompat.FROM_HTML_MODE_LEGACY)

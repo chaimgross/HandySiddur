@@ -11,14 +11,17 @@
 
         <android.support.wearable.view.CardFrame
             android:id="@+id/card_frame"
-            android:layout_width="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <com.handySiddur.bracha.ZoomTextView
                 android:id="@+id/text_view"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                android:layout_width="wrap_content"
+                android:padding="8dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
         </android.support.wearable.view.CardFrame>
@@ -27,7 +30,7 @@
 
     <ImageView
         android:id="@+id/image_icon"
-        android:layout_marginStart="-10dp"
+        android:layout_marginStart="-20dp"
         android:layout_gravity="center_vertical"
         android:layout_width="40dp"
         android:layout_height="40dp"/>
